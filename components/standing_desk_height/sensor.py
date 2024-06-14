@@ -3,7 +3,7 @@ import esphome.config_validation as cv
 from esphome import automation
 from esphome.automation import maybe_simple_id
 from esphome.components import uart, sensor
-from esphome.const import CONF_ID, CONF_VARIANT
+from esphome.const import CONF_ID, CONF_VARIANT, CONF_UPDATE_ON_BOOT
 
 DEPENDENCIES = ["uart"]
 
@@ -40,17 +40,19 @@ CONFIG_SCHEMA = (
     .extend({
         cv.GenerateID(): cv.declare_id(StandingDeskHeightSensor),
         cv.Optional(CONF_VARIANT): cv.enum(DECODER_VARIANTS, lower=True, space="_"),
+        cv.Optional(CONF_UPDATE_ON_BOOT, default=False): cv.boolean,
     })
     .extend(cv.polling_component_schema("500ms"))
     .extend(uart.UART_DEVICE_SCHEMA)
 )
 
-def to_code(config):
+async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     if CONF_VARIANT in config:
         cg.add(var.set_decoder_variant(config[CONF_VARIANT]))
+    if CONF_UPDATE_ON_BOOT in config:
+        cg.add(var.set_update_on_boot(config[CONF_UPDATE_ON_BOOT]))
 
-    yield cg.register_component(var, config)
-    yield sensor.register_sensor(var, config)
-    yield uart.register_uart_device(var, config)
-
+    await cg.register_component(var, config)
+    await sensor.register_sensor(var, config)
+    await uart.register_uart_device(var, config)

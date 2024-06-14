@@ -69,6 +69,10 @@ void StandingDeskHeightSensor::setup() {
     const LogString *variant_s = decoder_variant_to_string(this->decoder_variant);
     ESP_LOGD(TAG, "Using hardcoded decoder variant %s", LOG_STR_ARG(variant_s));
   }
+
+  if (this->update_on_boot_) {
+    this->write_byte(0x0);
+  }
 }
 
 void StandingDeskHeightSensor::loop() {

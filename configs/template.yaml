@@ -11,11 +11,13 @@ substitutions:
 uart:
   id: standing_desk_uart
   rx_pin: ${standing_desk_uart_rx_pin}
+  tx_pin: ${standing_desk_uart_tx_pin}
   baud_rate: 9600
 
 sensor:
   - platform: standing_desk_height
     id: desk_height
+    uart_id: standing_desk_uart
     name: ${desk_height_name}
     unit_of_measurement: ${standing_desk_height_units}
     variant: ${standing_desk_variant}

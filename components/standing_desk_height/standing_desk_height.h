@@ -18,6 +18,7 @@ class StandingDeskHeightSensor : public PollingComponent, public uart::UARTDevic
 {
 public:
   void set_decoder_variant(DecoderVariant decoder_variant);
+  void set_update_on_boot(bool update_on_boot) { update_on_boot_ = update_on_boot; };
   void start_decoder_detection();
 
   void setup() override;
@@ -34,6 +35,7 @@ protected:
   float last_published = -1;
 
   bool is_detecting = false;
+  bool update_on_boot_ = false;
   uint32_t started_detecting_at = 0;
 
   void try_next_decoder();
